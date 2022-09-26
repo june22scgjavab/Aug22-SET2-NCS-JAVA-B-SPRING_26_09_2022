@@ -251,9 +251,278 @@ public class Validator {
 	}
 
 }
+---------------------------------------------------------------------------------------------
+package com.myshop.exception;
+
+public class CustomerException extends Exception {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6752307295690970142L;
+
+	public CustomerException(String message) {
+    	super(message); // Parent class constructor is invoked.
+    	// Here the parent class is Exception
+    }
+}
+
+-------------------------------------------------------------------------------------
+package com.myshop.model;
+
+import java.time.LocalDate;
+
+public class Customer {
+private String customerId;
+private String customerName;
+private long mobileNumber;
+private LocalDate dateOfBirth;
+
+
+
+public Customer() {
+	super();
+	
+}
+public Customer(String customerId, String customerName, long mobileNumber, LocalDate dateOfBirth) {
+	super();
+	this.customerId = customerId;
+	this.customerName = customerName;
+	this.mobileNumber = mobileNumber;
+	this.dateOfBirth = dateOfBirth;
+}
+public String getCustomerId() {
+	return customerId;
+}
+public void setCustomerId(String customerId) {
+	this.customerId = customerId;
+}
+public String getCustomerName() {
+	return customerName;
+}
+public void setCustomerName(String customerName) {
+	this.customerName = customerName;
+}
+public long getMobileNumber() {
+	return mobileNumber;
+}
+public void setMobileNumber(long mobileNumber) {
+	this.mobileNumber = mobileNumber;
+}
+public LocalDate getDateOfBirth() {
+	return dateOfBirth;
+}
+public void setDateOfBirth(LocalDate dateOfBirth) {
+	this.dateOfBirth = dateOfBirth;
+}
+
+
+
+@Override
+public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
+	result = prime * result + ((customerName == null) ? 0 : customerName.hashCode());
+	result = prime * result + ((dateOfBirth == null) ? 0 : dateOfBirth.hashCode());
+	result = prime * result + (int) (mobileNumber ^ (mobileNumber >>> 32));
+	return result;
+}
+@Override
+public boolean equals(Object obj) {
+	if (this == obj)
+		return true;
+	if (obj == null)
+		return false;
+	if (getClass() != obj.getClass())
+		return false;
+	Customer other = (Customer) obj;
+	if (customerId == null) {
+		if (other.customerId != null)
+			return false;
+	} else if (!customerId.equals(other.customerId))
+		return false;
+	if (customerName == null) {
+		if (other.customerName != null)
+			return false;
+	} else if (!customerName.equals(other.customerName))
+		return false;
+	if (dateOfBirth == null) {
+		if (other.dateOfBirth != null)
+			return false;
+	} else if (!dateOfBirth.equals(other.dateOfBirth))
+		return false;
+	if (mobileNumber != other.mobileNumber)
+		return false;
+	return true;
+}
+@Override
+public String toString() {
+	return "Customer [customerId=" + customerId + ", customerName=" + customerName + ", mobileNumber=" + mobileNumber
+			+ ", dateOfBirth=" + dateOfBirth + "]";
+}
+
+}
+
+-------------------------------------------------------------------------------------------------------------------
+
+
+package com.myshop.dao;
+
+import java.util.List;
+
+import com.myshop.exception.CustomerException;
+import com.myshop.model.Customer;
+
+public interface CustomerDAO {
+
+	
+	public String addCustomer(Customer customer) throws CustomerException;
+    public List<Customer> displayCustomers() throws CustomerException;
+    
+}
+
+----------------------------------------------------------------------------------------------------------
+package com.myshop.dao;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.myshop.exception.CustomerException;
+import com.myshop.model.Customer;
+
+public class CustomerDAOImpl implements CustomerDAO {
+	private List<Customer> customerList = new ArrayList();
+
+	// We have to add the customers to a List(ArrayList)
+	public String addCustomer(Customer customer) throws CustomerException {
+
+		customerList.add(customer);
+		// We need to return the id of the customer which got added
+		return customer.getCustomerId();
+	}
+
+	public List<Customer> displayCustomers() throws CustomerException {
+		
+		return customerList;
+	}
+
+}
+------------------------------------------------------------------------------------------------------------
+package com.myshop.service;
+
+import java.util.List;
+
+import com.myshop.exception.CustomerException;
+import com.myshop.model.Customer;
+
+public interface CustomerService {
+	public String addCustomer(Customer customer) throws CustomerException;
+    public List<Customer> displayCustomers() throws CustomerException;
+}
+-------------------------------------------------------------------------------------------------------------------
+package com.myshop.service;
+
+import java.util.List;
+
+import com.myshop.dao.CustomerDAO;
+import com.myshop.dao.CustomerDAOImpl;
+import com.myshop.exception.CustomerException;
+import com.myshop.model.Customer;
+import com.myshop.service.validator.Validator;
+
+public class CustomerServiceImpl implements CustomerService {
+// We should create a reference variable of interface
+// and object of the class which has implemented the interface
+	private CustomerDAO customerDAO=new CustomerDAOImpl();
+	
+	public String addCustomer(Customer customer) throws CustomerException {
+		Validator validate=new Validator();
+		validate.validate(customer);
+		return customerDAO.addCustomer(customer);
+	}
+
+	public List<Customer> displayCustomers() throws CustomerException {
+		if(customerDAO.displayCustomers().isEmpty())
+		{
+			throw new CustomerException("The List is empty");
+		}
+		return customerDAO.displayCustomers();
+	}
+
+}
+
+---------------------------------------------------------------------------------------------------------------------
+
+package com.myshop.userinterface;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import com.myshop.exception.CustomerException;
+import com.myshop.model.Customer;
+import com.myshop.service.CustomerService;
+import com.myshop.service.CustomerServiceImpl;
+
+public class UserInterface {
+
+	private static CustomerService customerService = new CustomerServiceImpl();
+
+	public static void main(String[] args) {
+		// 1) ADD CUSTOMERS
+		addCustomers();
+		// 2) DISPLAY CUSTOMERS
+		displayCustomers();
+
+	}
+
+	private static void displayCustomers() {
+
+		try {
+			List<Customer> customerList = customerService.displayCustomers();
+			for (Customer customer : customerList) {
+				System.out.println(customer.getCustomerId() + " " + customer.getCustomerName());
+
+			}
+		} catch (CustomerException e) {
+
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+	private static void addCustomers() {
+
+		Customer customer = new Customer("C001", "Ravi Kumar", 9876543219L, LocalDate.of(2000, 10, 15));
+		String str;
+		try {
+			str = customerService.addCustomer(customer);
+			System.out.println(str);
+		} catch (CustomerException e) {
+			System.out.println(e.getMessage());
+		}
+
+	}
+
+}
+
+
+
+
+
 -----------------------------------------------------------------------------------------------------------------------------------
 
 Why we have to create an object of CustomerService as static in UserInterface class.
 
 A static block or static methods can access only only the static members.
 --------------------------------------------------------------------------------------------------------------------------------------
+Logger===> Logging the error message or successmessages to a file . But when we are using System.out.println() The data is displayed
+in the console and they disappears as the execution stops or we have a new execution. But when we use logger the data can be
+persisted in a file and can be read latter. 
+
+PropertiesConfiguration object is creating a PropertiesConfiguration object and through the getProperty we can read the properties 
+and their respective values.
+	
+	
+
+
+
