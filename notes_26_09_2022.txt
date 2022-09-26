@@ -1,0 +1,52 @@
+Aug22-SET2-NCS-JAVA-B
+
+
+STARTED ON 13-Sept-2022
+
+Java 11 Essentials                       4   https://academy.onwingspan.com/en/app/toc/lex_auth_01282407495720140868291_shared/overview/
+Java 11 Beyond Basics                    5
+https://academy.onwingspan.com/en/app/toc/lex_auth_0129939212951879681138_shared/overview/
+Service Layer using Spring               2          
+https://academy.onwingspan.com/en/app/toc/lex_7482544978385832000_shared/contents/
+Persistence Layer using Spring Data      4
+REST API using Spring                    3
+Microservice - An Overview               2
+Total                                    20
+
+--------------------------------------------------------------------------------------------------------------------------------------
+Service Layer using Spring                         2
+Persistence Layer using Spring Data                4
+REST API using Spring                              3
+Microservice - An Overview                         2
+--------------------------------------------------------------------------------------------------------------------------------------
+Q We learn core java . Why I should learn Spring and how it will help in developing an enterprise application?
+A Core java is fine till we develop a single standalone application which is running on a single system and at the most
+  supporting user.
+
+Functional requirements ====> Actually the modules without which the application is
+not useable.
+Non-Functional requirements:=====> additional features which enhances the quality of the application like security of user's data.
+   Quick reponsetime, availabilty.
+
+There are certain things which are common for all the enterprise applications and those features/code can be created and 
+provided in advance and the similar kind of oppertunities are given by spring framework. 
+------------------------------------------------------------------------------------------------------------------------------------
+From now we have to plan for developing enterprise ( business application) where only knowledge and understanding of core java wont do.So Framework like Spring always give us the execution environment and also some core templates( codes ) beforehand which we 
+dont have to write and those kind of codes are repeatedly used in all the enterprise application. 
+-----------------------------------------------------------------------------------------------------------------------
+Client Tier========>Presentation=================>Business=======>Persistence=============> Database
+----------------------------------------------------------------------------------------------------------------------------
+*  Spring Rest
+*  Spring Core/POJO ( Plain Old Java Object)
+*  Spring DATA JPA ( Java Persistence API)/Hibernate
+*  AOP ( Aspect Oriented Programming )
+-----------------------------------------------------------------------------------------------------------------------------------
+*Spring Core/POJO ====> Spring Core ( Basic Spring Framework related code)====>Business Tier
+*AOP ================> Helper concept to the Business Tier
+* Spring Data========> Persistence Tier
+*Spring Rest========> Presentation
+
+Currently the below is not our concern:-
+HTML/CSS/Angular/React=====>Client Tier          
+--------------------------------------------------------------------------------------------------------------------------
+
